@@ -25,20 +25,7 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            Fragment selectedFragment = null;
-            switch (item.getItemId()) {
-                case R.id.navigation_posts:
-                    selectedFragment = new PostsFragment();
-                    break;
-                case R.id.navigation_albums:
-                    break;
-                case R.id.navigation_users:
-                    selectedFragment = new UsersFragment();
-                    break;
-            }
-            transaction.replace(R.id.homeConteiner, selectedFragment);
-            transaction.commit();
+            presenter.itemSelected(item.getItemId());
             return true;
         }
     };
@@ -50,16 +37,28 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
         ButterKnife.bind(this);
 
         bottomBar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        PostsFragment postFragment = new PostsFragment();
-        transaction.replace(R.id.homeConteiner, postFragment);
-        transaction.commit();
+        presenter.itemSelected(R.id.navigation_posts);
     }
 
     @NonNull
     @Override
     public HomePresenter createPresenter() {
         return new HomePresenterImpl();
+    }
+
+    @Override
+    public void setActiveFragment(int menuId) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment selectedFragment = null;
+        switch (menuId) {
+            case R.id.navigation_posts:
+                selectedFragment = new PostsFragment();
+                break;
+            case R.id.navigation_users:
+                selectedFragment = new UsersFragment();
+                break;
+        }
+        transaction.replace(R.id.homeConteiner, selectedFragment);
+        transaction.commit();
     }
 }

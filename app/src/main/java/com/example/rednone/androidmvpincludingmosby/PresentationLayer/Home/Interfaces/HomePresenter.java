@@ -7,4 +7,5 @@ import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
  */
 
 public interface HomePresenter extends MvpPresenter<HomeView> {
+    void itemSelected(int itemId);
 }

@@ -7,5 +7,5 @@ import com.hannesdorfmann.mosby3.mvp.MvpView;
  */
 
 public interface HomeView extends MvpView {
-
+    void setActiveFragment(int menuId);
 }
