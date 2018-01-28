@@ -54,10 +54,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         @BindView(R.id.postsCell)
         ConstraintLayout layoutView;
-
         @BindView(R.id.postTitleView)
         TextView titleView;
-
         @BindView(R.id.postDescriptionView)
         TextView descriptionView;
 

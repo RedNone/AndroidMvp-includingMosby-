@@ -98,4 +98,10 @@ public class PostsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout,Li
     public void onRefresh() {
         loadData(true);
     }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+        contentView.setRefreshing(false);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.View
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
@@ -24,18 +25,19 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction transaction = getSupportFragmentManager() .beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_posts:
-                    PostsFragment fragment = new PostsFragment();
-                    transaction.replace(R.id.homeConteiner, fragment);
+                    selectedFragment = new PostsFragment();
                     break;
                 case R.id.navigation_albums:
                     break;
                 case R.id.navigation_users:
+                    selectedFragment = new UsersFragment();
                     break;
             }
-            transaction.addToBackStack(null);
+            transaction.replace(R.id.homeConteiner, selectedFragment);
             transaction.commit();
             return true;
         }
@@ -48,7 +50,11 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
         ButterKnife.bind(this);
 
         bottomBar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        bottomBar.setSelectedItemId(R.id.navigation_posts);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        PostsFragment postFragment = new PostsFragment();
+        transaction.replace(R.id.homeConteiner, postFragment);
+        transaction.commit();
     }
 
     @NonNull

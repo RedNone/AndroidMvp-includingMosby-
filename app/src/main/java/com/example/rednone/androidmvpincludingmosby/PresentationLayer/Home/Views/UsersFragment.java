@@ -4,12 +4,16 @@ package com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.View
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rednone.androidmvpincludingmosby.DataLayer.Models.UserModel;
+import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Adapters.UsersAdapter;
 import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Interfaces.UsersPresenter;
 import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Interfaces.UsersView;
 import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Presenters.UsersPresenterImpl;
@@ -20,12 +24,19 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UsersFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, List<UserModel>, UsersView, UsersPresenter>
         implements UsersView, SwipeRefreshLayout.OnRefreshListener {
 
+    @BindView(R.id.usersRecyclerView)
+    RecyclerView recyclerView;
+
+    UsersAdapter adapter;
 
     public UsersFragment() {
         // Required empty public constructor
@@ -43,9 +54,8 @@ public class UsersFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, L
 
     @Override
     public List<UserModel> getData() {
-        return null;
+        return adapter == null ? null : adapter.getData();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,8 +65,20 @@ public class UsersFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, L
     }
 
     @Override
-    public void onRefresh() {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        contentView.setOnRefreshListener(this);
 
+        adapter = new UsersAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+        loadData(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        loadData(true);
     }
 
     @NonNull
@@ -67,11 +89,18 @@ public class UsersFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, L
 
     @Override
     public void setData(List<UserModel> data) {
-
+        adapter.setUsers(data);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
+        presenter.loadUsers(pullToRefresh);
+    }
 
+    @Override
+    public void showContent() {
+        super.showContent();
+        contentView.setRefreshing(false);
     }
 }
