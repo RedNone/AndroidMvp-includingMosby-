@@ -6,4 +6,3 @@ In this project I use:
 3) Mosby
 4) ButterKnife
 5) Retrofit
-6) SQlite
