@@ -10,13 +10,14 @@ import android.view.MenuItem;
 import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Interfaces.HomePresenter;
 import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Interfaces.HomeView;
 import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.Presenters.HomePresenterImpl;
+import com.example.rednone.androidmvpincludingmosby.PresentationLayer.Home.ViewStates.HomeViewState;
 import com.example.rednone.androidmvpincludingmosby.R;
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
+import com.hannesdorfmann.mosby3.mvp.viewstate.MvpViewStateActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends MvpActivity<HomeView, HomePresenter> implements HomeView {
+public class HomeActivity extends MvpViewStateActivity<HomeView, HomePresenter, HomeViewState> implements HomeView {
 
     @BindView(R.id.homeNavigation)
     BottomNavigationView bottomBar;
@@ -37,7 +38,6 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
         ButterKnife.bind(this);
 
         bottomBar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        presenter.itemSelected(R.id.navigation_posts);
     }
 
     @NonNull
@@ -48,6 +48,7 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
 
     @Override
     public void setActiveFragment(int menuId) {
+        viewState.setVisibleMenuItemId(menuId);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Fragment selectedFragment = null;
         switch (menuId) {
@@ -60,5 +61,16 @@ public class MainActivity extends MvpActivity<HomeView, HomePresenter> implement
         }
         transaction.replace(R.id.homeConteiner, selectedFragment);
         transaction.commit();
+    }
+
+    @NonNull
+    @Override
+    public HomeViewState createViewState() {
+        return new HomeViewState();
+    }
+
+    @Override
+    public void onNewViewStateInstance() {
+        bottomBar.setSelectedItemId(R.id.navigation_posts);
     }
 }

@@ -57,6 +57,11 @@ public class PostsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout,Li
         return adapter == null ? null : adapter.getData();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,13 +79,18 @@ public class PostsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout,Li
         adapter = new PostsAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-        loadData(false);
     }
 
     @NonNull
     @Override
     public LceViewState<List<PostModel>, PostsView> createViewState() {
         return new RetainingLceViewState<>();
+    }
+
+    @Override
+    public void onNewViewStateInstance() {
+        super.onNewViewStateInstance();
+        loadData(false);
     }
 
     @Override
@@ -100,8 +110,20 @@ public class PostsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout,Li
     }
 
     @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+        super.showError(e, pullToRefresh);
+        contentView.setRefreshing(false);
+    }
+
+    @Override
     public void showContent() {
         super.showContent();
         contentView.setRefreshing(false);
+    }
+
+    @Override
+    public void showLoading(boolean pullToRefresh) {
+        super.showLoading(pullToRefresh);
+        contentView.setRefreshing(pullToRefresh);
     }
 }
