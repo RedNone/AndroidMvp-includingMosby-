@@ -53,10 +53,10 @@ public class HomeActivity extends MvpViewStateActivity<HomeView, HomePresenter, 
         Fragment selectedFragment = null;
         switch (menuId) {
             case R.id.navigation_posts:
-                selectedFragment = new PostsFragment();
+                selectedFragment = viewState.getPostsFragment();
                 break;
             case R.id.navigation_users:
-                selectedFragment = new UsersFragment();
+                selectedFragment = viewState.getUsersFragment();
                 break;
         }
         transaction.replace(R.id.homeConteiner, selectedFragment);

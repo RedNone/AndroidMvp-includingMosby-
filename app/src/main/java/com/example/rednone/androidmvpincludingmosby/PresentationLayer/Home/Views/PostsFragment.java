@@ -79,6 +79,7 @@ public class PostsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout,Li
         adapter = new PostsAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+        loadData(false);
     }
 
     @NonNull
@@ -90,7 +91,6 @@ public class PostsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout,Li
     @Override
     public void onNewViewStateInstance() {
         super.onNewViewStateInstance();
-        loadData(false);
     }
 
     @Override
